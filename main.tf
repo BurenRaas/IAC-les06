@@ -98,6 +98,11 @@ resource "azurerm_linux_virtual_machine" "vm" {
   custom_data = base64encode(file("cloud-config.yml"))
 }
 
+output "azure_vm_ips" {
+  value = [for ip in azurerm_public_ip.pip : ip.ip_address]
+}
+
+
 #Web server op esx
 resource "esxi_guest" "webserver" {
   count      = 1
@@ -128,10 +133,17 @@ echo "${ip} ansible_user=student ansible_ssh_private_key_file=~/.ssh/iac" >> inv
 ssh-keyscan -H ${ip} >> ~/.ssh/known_hosts
 %{endfor~}
 
+echo "[azure]" >> inventory.ini
+for ip in ${join(" ", azurerm_public_ip.pip[*].ip_address)}; do
+  echo "$ip ansible_user=iac ansible_ssh_private_key_file=~/.ssh/iac" >> inventory.ini
+  ssh-keyscan -H $ip >> ~/.ssh/known_hosts
+done
 EOT
   }
 
   depends_on = [
     esxi_guest.webserver,
+    azurerm_linux_virtual_machine.vm,
+    azurerm_public_ip.pip
   ]
 }

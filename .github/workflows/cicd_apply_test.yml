@@ -20,11 +20,9 @@ jobs:
 
       - name: Terraform init
         run: terraform init
-        working-directory: ./opdracht3
 
       - name: Terraform validate
         run: terraform validate
-        working-directory: ./opdracht3
 
       - name: Terraform fmt
         run: terraform fmt -check
