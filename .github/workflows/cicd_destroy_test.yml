@@ -16,11 +16,15 @@ jobs:
 
       - name: Terraform init
         run: terraform init
+        
+      - name: List restored state
+        run: ls -la
 
       - name: Restore Terraform state
         uses: actions/download-artifact@v4
         with:
           name: tfstate
+          path: terraform.tfstate
 
       - name: Terraform destroy
         run: terraform destroy --auto-approve
