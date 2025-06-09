@@ -1,0 +1,22 @@
+name: CI/CD destroy omgeving
+
+on: workflow_dispatch
+
+jobs:
+  destroy:
+    name: Terraform destroy
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform destroy
+        run: terraform destroy --auto-approve
+
