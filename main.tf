@@ -95,9 +95,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
     version   = "latest"
   }
 
-  custom_data = base64encode(templatefile("cloud-config.yml", {
-  testuser_pubkey = file("~/.ssh/testuser.pub"),
- }))
+  custom_data = base64encode(file("cloud-init.yml"))
 }
 
 output "azure_vm_ips" {
@@ -120,12 +118,9 @@ resource "esxi_guest" "webserver" {
   }
 
   guestinfo = {
-  "userdata" = base64encode(templatefile("${path.module}/cloud-config.yml", {
-    testuser_pubkey = file("~/.ssh/testuser.pub"),
-    testuser_privkey = file("~/.ssh/testuser")
-  }))
-  "userdata.encoding" = "base64"
- }
+    "userdata"          = filebase64("cloud-config.yml")
+    "userdata.encoding" = "base64"
+  }
 }
 
 #Generate Ansible inventoryfile (IP, user & SSH key) voor webservers en voegt ips toe aan known_hosts voor SSH toegang.

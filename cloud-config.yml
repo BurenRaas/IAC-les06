@@ -10,6 +10,6 @@ users:
 write_files:
   - path: /home/testuser/.ssh/id_rsa
     content: |
-      ${indent(6, file("~/.ssh/testuser"))}
+      ${testuser_privkey}
     owner: testuser:testuser
     permissions: '0600'
