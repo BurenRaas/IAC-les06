@@ -1,0 +1,52 @@
+# GitHub workflow artifacts
+.github/*.log
+.github/*.bak
+
+
+
+# GitHub Runner (lokale runner bestanden)
+opdracht2/_runner/
+actions-runner/
+opdracht2/actions-runner/
+actions-runner/
+.env
+*.env
+*.sh
+*.bat
+*.cmd
+
+# Ansible
+*.retry
+*.log
+*.vault_pass
+.vscode/
+__pycache__/
+*.pyc
+host_vars/
+group_vars/
+ansible.cfg
+*.swp
+
+# Terraform
+terraform.tfstate
+*.terraform/
+.tfstate
+.backup'
+.terraform.lock.hcl
+crash.log
+override.tf
+override.tf.json
+terraform.tfvars
+terraform.tfvars.json
+
+# OS/Editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Python virtual environments (als je python gebruikt voor testing/scripting)
+.venv/
+venv/
