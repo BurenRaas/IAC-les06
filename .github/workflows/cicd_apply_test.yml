@@ -51,6 +51,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: terraform.tfstate
+          path: terraform.tfstate
 
 
       - name: cat inventory.ini
