@@ -1,9 +1,15 @@
 #cloud-config
 users:
-  - name: student
+  - name: testuser
     groups: sudo
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
     ssh_authorized_keys:
-    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL58jaxD3fXQPm5zm7KdRJ0vMFsC1a/BnCtDgspeCbwg student@s1190828-ubuntu
+      - ${testuser_pubkey}
 
+write_files:
+  - path: /home/testuser/.ssh/id_rsa
+    content: |
+      ${indent(6, file("~/.ssh/testuser"))}
+    owner: testuser:testuser
+    permissions: '0600'
