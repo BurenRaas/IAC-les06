@@ -16,7 +16,7 @@ jobs:
 
       - name: Terraform init
         run: terraform init
-        
+
       - name: List restored state
         run: ls -la
 
@@ -25,6 +25,7 @@ jobs:
         with:
           name: tfstate
           path: terraform.tfstate
+        continue-on-error: true
 
       - name: Terraform destroy
         run: terraform destroy --auto-approve
