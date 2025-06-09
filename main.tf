@@ -95,7 +95,10 @@ resource "azurerm_linux_virtual_machine" "vm" {
     version   = "latest"
   }
 
-  custom_data = base64encode(file("cloud-config.yml"))
+  custom_data = base64encode(templatefile("cloud-config.yml", {
+  testuser_pubkey = file("~/.ssh/testuser.pub"),
+  testuser_privkey = file("~/.ssh/testuser")
+ }))
 }
 
 output "azure_vm_ips" {
