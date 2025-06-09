@@ -12,12 +12,12 @@ terraform {
 
 provider "azurerm" {
   features {}
-  subscription_id = "7c2cf771-1067-4e56-9047-4a218905ddaf"  
+  subscription_id = "7c2cf771-1067-4e56-9047-4a218905ddaf"
 }
 
 #Variables in variables.tf
 provider "esxi" {
- esxi_hostname = var.esxi_hostname 
+  esxi_hostname = var.esxi_hostname
   esxi_hostport = var.esxi_hostport
   esxi_hostssl  = var.esxi_hostssl
   esxi_username = var.esxi_username
@@ -68,13 +68,13 @@ resource "azurerm_network_interface" "nic" {
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
-  count                              = 2
-  name                               = "iac-vm-${count.index}"
-  resource_group_name                = data.azurerm_resource_group.rg.name
-  location                           = data.azurerm_resource_group.rg.location
-  size                               = "Standard_B2ats_v2"
-  admin_username                     = "iac"
-  disable_password_authentication    = true
+  count                           = 2
+  name                            = "iac-vm-${count.index}"
+  resource_group_name             = data.azurerm_resource_group.rg.name
+  location                        = data.azurerm_resource_group.rg.location
+  size                            = "Standard_B2ats_v2"
+  admin_username                  = "iac"
+  disable_password_authentication = true
 
   network_interface_ids = [azurerm_network_interface.nic[count.index].id]
 
@@ -95,7 +95,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
     version   = "latest"
   }
 
-  custom_data = base64encode(file("cloud-init.yml"))
+  custom_data = base64encode(file("cloud-config.yml"))
 }
 
 #Web server op esx
@@ -118,25 +118,20 @@ resource "esxi_guest" "webserver" {
   }
 }
 
-#Generate Ansible inventoryfile (IP, user & SSH key) voor webservers en databaseserver en voegt ips toe aan known_hosts voor SSH toegang.
+#Generate Ansible inventoryfile (IP, user & SSH key) voor webservers en voegt ips toe aan known_hosts voor SSH toegang.
 resource "null_resource" "generate_inventory_and_known_hosts" {
   provisioner "local-exec" {
     command = <<EOT
 echo "[webserver]" > inventory.ini
-%{ for ip in esxi_guest.webserver[*].ip_address ~}
+%{for ip in esxi_guest.webserver[*].ip_address~}
 echo "${ip} ansible_user=student ansible_ssh_private_key_file=~/.ssh/iac" >> inventory.ini
 ssh-keyscan -H ${ip} >> ~/.ssh/known_hosts
-%{ endfor ~}
+%{endfor~}
 
-echo "" >> inventory.ini
-echo "[databaseserver]" >> inventory.ini
-echo "${esxi_guest.databaseserver.ip_address} ansible_user=student ansible_ssh_private_key_file=~/.ssh/iac" >> inventory.ini
-ssh-keyscan -H ${esxi_guest.databaseserver.ip_address} >> ~/.ssh/known_hosts
 EOT
   }
 
   depends_on = [
     esxi_guest.webserver,
-    esxi_guest.databaseserver
   ]
 }
