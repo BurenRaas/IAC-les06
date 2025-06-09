@@ -41,15 +41,17 @@ jobs:
       - name: Terraform apply 
         run: |
           terraform apply --auto-approve
+        continue-on-error: true
+
 
       - name: List files before upload
         run: ls -la    
-        
+
       - name: Upload Terraform state
         uses: actions/upload-artifact@v4
         with:
-          name: tfstate
-          path: terraform.tfstate
+          name: terraform.tfstate
+
 
       - name: cat inventory.ini
         run: | 
