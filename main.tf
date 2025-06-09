@@ -45,7 +45,7 @@ resource "azurerm_subnet" "subnet" {
 }
 
 resource "azurerm_public_ip" "pip" {
-  count               = 2
+  count               = 1
   name                = "2b-publicip-${count.index}"
   location            = data.azurerm_resource_group.rg.location
   resource_group_name = data.azurerm_resource_group.rg.name
@@ -54,7 +54,7 @@ resource "azurerm_public_ip" "pip" {
 }
 
 resource "azurerm_network_interface" "nic" {
-  count               = 2
+  count               = 1
   name                = "iac-nic-${count.index}"
   location            = data.azurerm_resource_group.rg.location
   resource_group_name = data.azurerm_resource_group.rg.name
@@ -68,7 +68,7 @@ resource "azurerm_network_interface" "nic" {
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
-  count                           = 2
+  count                           = 1
   name                            = "iac-vm-${count.index}"
   resource_group_name             = data.azurerm_resource_group.rg.name
   location                        = data.azurerm_resource_group.rg.location
@@ -134,10 +134,8 @@ ssh-keyscan -H ${ip} >> ~/.ssh/known_hosts
 %{endfor~}
 
 echo "[azure]" >> inventory.ini
-for ip in ${join(" ", azurerm_public_ip.pip[*].ip_address)}; do
-  echo "$ip ansible_user=iac ansible_ssh_private_key_file=~/.ssh/iac" >> inventory.ini
-  ssh-keyscan -H $ip >> ~/.ssh/known_hosts
-done
+echo "${azurerm_public_ip.pip[0].ip_address} ansible_user=iac ansible_ssh_private_key_file=~/.ssh/iac" >> inventory.ini
+ssh-keyscan -H ${azurerm_public_ip.pip[0].ip_address} >> ~/.ssh/known_hosts
 EOT
   }
 

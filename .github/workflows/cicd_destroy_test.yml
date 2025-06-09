@@ -16,7 +16,9 @@ jobs:
 
       - name: Terraform init
         run: terraform init
+        continue-on-error: true
 
       - name: Terraform destroy
         run: terraform destroy --auto-approve
+        continue-on-error: true
 
