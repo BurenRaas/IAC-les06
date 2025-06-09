@@ -16,9 +16,13 @@ jobs:
 
       - name: Terraform init
         run: terraform init
-        continue-on-error: true
+
+      - name: Restore Terraform state
+        uses: actions/download-artifact@v2
+        with:
+          name: tfstate
 
       - name: Terraform destroy
         run: terraform destroy --auto-approve
-        continue-on-error: true
+
 

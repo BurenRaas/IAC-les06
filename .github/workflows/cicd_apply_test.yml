@@ -38,8 +38,16 @@ jobs:
       - name: Terraform init
         run: terraform init
 
-
       - name: Terraform apply 
         run: |
           terraform apply --auto-approve
+      - name: Save Terraform state
+        uses: actions/upload-artifact@v2
+        with:
+          name: tfstate
+          path: terraform.tfstate
+
+      - name: cat inventory.ini
+        run: | 
+          cat inventory.ini
 
