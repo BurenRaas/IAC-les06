@@ -2,9 +2,9 @@ name: CICD test branch
 
 on:
   push:
-    branches: [test]
+    branches: [prod]
   pull_request:
-    branches: [test]
+    branches: [prod]
 
 
 jobs:
