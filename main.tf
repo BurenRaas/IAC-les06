@@ -95,7 +95,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
     version   = "latest"
   }
 
-  custom_data = base64encode(file("cloud-init.yml"))
+  custom_data = base64encode(file("cloud-config.yml"))
 }
 
 output "azure_vm_ips" {
