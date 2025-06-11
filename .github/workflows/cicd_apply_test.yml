@@ -58,7 +58,7 @@ jobs:
         run: | 
           cat inventory.ini
 
-    Ansible:
+  Ansible:
      name: Ansible playbooks
      runs-on: self-hosted
      needs: terraform
