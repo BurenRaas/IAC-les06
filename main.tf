@@ -133,7 +133,6 @@ echo "${ip} ansible_user=student ansible_ssh_private_key_file=~/.ssh/iac" >> inv
 ssh-keyscan -H ${ip} >> ~/.ssh/known_hosts
 %{endfor~}
 
-echo "[azure]" >> inventory.ini
 echo "${azurerm_public_ip.pip[0].ip_address} ansible_user=student ansible_ssh_private_key_file=~/.ssh/iac" >> inventory.ini
 ssh-keyscan -H ${azurerm_public_ip.pip[0].ip_address} >> ~/.ssh/known_hosts
 EOT
