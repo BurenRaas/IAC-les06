@@ -7,6 +7,7 @@ on:
     branches: [main]
 
 
+
 jobs:
   Validate:
     name: Terraform validate
@@ -26,6 +27,17 @@ jobs:
 
       - name: Terraform fmt
         run: terraform fmt -check
+
+    name: Ansible validate
+    runs-on: self-hosted
+    steps:
+      - name: Install Ansible and ansible-lint
+        run: |
+          pip install ansible ansible-lint
+          
+      - name: Run ansible-lint
+        run: |
+          ansible-lint playbook.yml
 
   Terraform:
     name: Terraform provision
