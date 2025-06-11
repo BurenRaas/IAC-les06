@@ -55,7 +55,7 @@ resource "azurerm_public_ip" "pip" {
 
 resource "azurerm_network_interface" "nic" {
   count               = 1
-  name                = "iac-nic-${count.index}"
+  name                = "nic-${count.index}"
   location            = data.azurerm_resource_group.rg.location
   resource_group_name = data.azurerm_resource_group.rg.name
 
@@ -69,17 +69,17 @@ resource "azurerm_network_interface" "nic" {
 
 resource "azurerm_linux_virtual_machine" "vm" {
   count                           = 1
-  name                            = "iac-vm-${count.index}"
+  name                            = "vm-${count.index}"
   resource_group_name             = data.azurerm_resource_group.rg.name
   location                        = data.azurerm_resource_group.rg.location
   size                            = "Standard_B2ats_v2"
-  admin_username                  = "iac"
+  admin_username                  = "student"
   disable_password_authentication = true
 
   network_interface_ids = [azurerm_network_interface.nic[count.index].id]
 
   admin_ssh_key {
-    username   = "iac"
+    username   = "student"
     public_key = file("~/.ssh/iac.pub")
   }
 
@@ -133,8 +133,7 @@ echo "${ip} ansible_user=student ansible_ssh_private_key_file=~/.ssh/iac" >> inv
 ssh-keyscan -H ${ip} >> ~/.ssh/known_hosts
 %{endfor~}
 
-echo "[azure]" >> inventory.ini
-echo "${azurerm_public_ip.pip[0].ip_address} ansible_user=iac ansible_ssh_private_key_file=~/.ssh/iac" >> inventory.ini
+echo "${azurerm_public_ip.pip[0].ip_address} ansible_user=student ansible_ssh_private_key_file=~/.ssh/iac" >> inventory.ini
 ssh-keyscan -H ${azurerm_public_ip.pip[0].ip_address} >> ~/.ssh/known_hosts
 EOT
   }

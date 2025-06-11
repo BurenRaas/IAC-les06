@@ -1,0 +1,34 @@
+- name: Setup testuser with SSH key
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create testuser
+      user:
+        name: testuser
+        shell: /bin/bash
+        state: present
+        create_home: yes
+
+    - name: Create .ssh directory
+      file:
+        path: /home/testuser/.ssh
+        state: directory
+        owner: testuser
+        group: testuser
+        mode: '0700'
+
+    - name: Install public key into authorized_keys
+      copy:
+        src: /home/student/.ssh/testuser.pub 
+        dest: /home/testuser/.ssh/authorized_keys
+        owner: testuser
+        group: testuser
+        mode: '0600'
+
+    - name: Copy private key to ESXi VM
+      copy:
+        src: ~/.ssh/testuser  
+        dest: /home/testuser/.ssh/testuser
+        owner: testuser
+        group: testuser
+        mode: '0600'
