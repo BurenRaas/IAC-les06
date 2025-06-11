@@ -2,9 +2,9 @@ name: CICD test branch
 
 on:
   push:
-    branches: [prod]
+    branches: [main] 
   pull_request:
-    branches: [prod]
+    branches: [main]
 
 
 jobs:
@@ -38,8 +38,22 @@ jobs:
       - name: Terraform init
         run: terraform init
 
-
       - name: Terraform apply 
         run: |
           terraform apply --auto-approve
+
+    Ansible:
+     name: Ansible playbooks
+     runs-on: self-hosted
+     needs: terraform
+     steps:
+      - name: testuser_playbook
+        run: |
+          cat inventory.ini
+
+      - name: testuser_playbook
+        run: |
+          ansible-playbook -i inventory.ini playbooks/testuser_playbook.yml
+
+      
 
