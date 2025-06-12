@@ -123,6 +123,11 @@ resource "esxi_guest" "webserver" {
   }
 }
 
+output "webserver_ips" {
+  value = [for vm in esxi_guest.webserver : vm.ip_address]
+}
+
+
 #Generate Ansible inventoryfile (IP, user & SSH key) voor webservers en voegt ips toe aan known_hosts voor SSH toegang.
 resource "null_resource" "generate_inventory_and_known_hosts" {
   provisioner "local-exec" {
