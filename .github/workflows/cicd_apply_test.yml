@@ -60,6 +60,16 @@ jobs:
       - name: check inventory.ini
         run: cat inventory.ini
 
+      - name: Run testuser playbook
+        run: ansible-playbook -i ~/IAC/les06/inventory.ini playbooks/testuser_playbook.yml
+
+      - name: Install Docker role from Galaxy
+        run: ansible-galaxy install BurenRaas.docker
+
+      - name: Run Docker role playbook
+        run: ansible-playbook -i ~/IAC/les06/inventory.ini ansible-role-docker/playbook.yml
+
+
   ansible-deploy:
     name: Ansible tasks
     runs-on: self-hosted
