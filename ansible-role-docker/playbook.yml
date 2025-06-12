@@ -2,4 +2,4 @@
   hosts: webserver
   become: yes
   roles:
-    - install_docker_hello
+    - install_docker

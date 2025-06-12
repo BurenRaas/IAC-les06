@@ -68,6 +68,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: check inventory.ini
+        run: cat inventory.ini
+
       - name: Run testuser playbook
         run: ansible-playbook -i inventory.ini playbooks/testuser_playbook.yml
 
