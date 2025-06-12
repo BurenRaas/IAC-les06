@@ -1,6 +1,6 @@
 name: CICD 
 
-#Code checken
+#code checken
 #omgeving opbouwen met Terraform
 #playbooks draaien met Ansible
 
@@ -56,6 +56,9 @@ jobs:
 
       - name: Terraform apply
         run: terraform apply --auto-approve
+
+      - name: check inventory.ini
+        run: cat inventory.ini
 
   ansible-deploy:
     name: Ansible tasks
