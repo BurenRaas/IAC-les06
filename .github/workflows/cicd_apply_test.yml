@@ -59,7 +59,7 @@ jobs:
   ansible-deploy:
     name: Ansible tasks
     runs-on: self-hosted
-    needs: terraform-apply, ansible-validate
+    needs:  [terraform-apply, ansible-validate]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
