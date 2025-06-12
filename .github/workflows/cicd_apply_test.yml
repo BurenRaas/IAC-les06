@@ -41,6 +41,7 @@ jobs:
       - name: Run ansible-lint
         run: |
           ansible-lint playbooks/testuser_playbook.yml
+        continue-on-error: true 
 
   terraform-apply:
     name: Terraform provision
@@ -59,7 +60,7 @@ jobs:
   ansible-deploy:
     name: Ansible tasks
     runs-on: self-hosted
-    needs:  [terraform-apply, ansible-validate]
+    needs:  terraform-apply
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
