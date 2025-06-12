@@ -1,15 +1,17 @@
-name: CICD test branch
+name: CICD 
+
+#Code checken
+#omgeving opbouwen met Terraform
+#playbooks draaien met Ansible
 
 on:
   push:
-    branches: [main] 
+    branches: [main]
   pull_request:
     branches: [main]
 
-
-
 jobs:
-  Validate:
+  terraform-validate:
     name: Terraform validate
     runs-on: self-hosted
     steps:
@@ -28,21 +30,22 @@ jobs:
       - name: Terraform fmt
         run: terraform fmt -check
 
+  ansible-validate:
     name: Ansible validate
     runs-on: self-hosted
     steps:
       - name: Install Ansible and ansible-lint
         run: |
           pip install ansible ansible-lint
-          
+
       - name: Run ansible-lint
         run: |
-          ansible-lint playbook.yml
+          ansible-lint playbooks/testuser_playbook.yml
 
-  Terraform:
+  terraform-apply:
     name: Terraform provision
     runs-on: self-hosted
-    needs: validate
+    needs: terraform-validate
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -50,22 +53,25 @@ jobs:
       - name: Terraform init
         run: terraform init
 
-      - name: Terraform apply 
-        run: |
-          terraform apply --auto-approve
+      - name: Terraform apply
+        run: terraform apply --auto-approve
 
-    Ansible:
-     name: Ansible playbooks
-     runs-on: self-hosted
-     needs: terraform
-     steps:
-      - name: testuser_playbook
-        run: |
-          cat inventory.ini
+  ansible-deploy:
+    name: Ansible tasks
+    runs-on: self-hosted
+    needs: terraform-apply, ansible-validate
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: testuser_playbook
-        run: |
-          ansible-playbook -i inventory.ini playbooks/testuser_playbook.yml
+      - name: Show inventory
+        run: cat inventory.ini
 
-      
+      - name: Run testuser playbook
+        run: ansible-playbook -i inventory.ini playbooks/testuser_playbook.yml
 
+      - name: Install Docker role from Galaxy
+        run: ansible-galaxy install BurenRaas.docker
+
+      - name: Run Docker role playbook
+        run: ansible-playbook -i inventory.ini ansible-role-docker/playbook.yml

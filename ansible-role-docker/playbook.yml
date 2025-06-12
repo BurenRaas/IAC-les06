@@ -1,0 +1,5 @@
+- name: Installeer en test Docker op webservers
+  hosts: webserver
+  become: yes
+  roles:
+    - install_docker_hello

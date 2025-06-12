@@ -36,3 +36,7 @@ Author Information
 ------------------
 
 An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+
+AI prompt:
+Ansible-galaxy role dat docker installeert
+https://chatgpt.com/share/684a9121-a41c-8007-a64c-1f4442b87990
