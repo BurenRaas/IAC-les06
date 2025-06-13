@@ -61,19 +61,21 @@ jobs:
         run: cat inventory.ini
 
       - name: check inventor
-        run: ansible-inventory -i /home/student/IAC/les06/inventory.ini --list
+        run: ansible-inventory -i inventory.ini --list
 
       - name: echo pwd
         run: echo "$PWD"
 
       - name: Run testuser playbook
-        run: ansible-playbook -i ~/IAC/les06/inventory.ini playbooks/testuser_playbook.yml
+        run: ansible-playbook -i inventory.ini playbooks/testuser_playbook.yml
+        directory: les06/
 
       - name: Install Docker role from Galaxy
         run: ansible-galaxy install BurenRaas.docker
 
       - name: Run Docker role playbook
-        run: ansible-playbook -i ~/IAC/les06/inventory.ini ansible-role-docker/playbook.yml
+        run: ansible-playbook -i inventory.ini ansible-role-docker/playbook.yml
+        directory: les06/
 
 
   ansible-deploy:
