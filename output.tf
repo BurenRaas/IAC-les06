@@ -1,3 +1,0 @@
-output "webserver_ips" {
-  value = [for vm in esxi_guest.webserver : vm.ip_address]
-}

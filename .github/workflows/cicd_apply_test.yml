@@ -1,14 +1,17 @@
-name: CICD test branch
+name: CICD 
+
+#code checken
+#omgeving opbouwen met Terraform
+#playbooks draaien met Ansible
 
 on:
   push:
-    branches: [main] 
+    branches: [test] 
   pull_request:
     branches: [main]
 
-
 jobs:
-  Validate:
+  terraform-validate:
     name: Terraform validate
     runs-on: self-hosted
     steps:
@@ -27,10 +30,23 @@ jobs:
       - name: Terraform fmt
         run: terraform fmt -check
 
-  Terraform:
+  ansible-validate:
+    name: Ansible validate
+    runs-on: self-hosted
+    steps:
+      - name: Install Ansible and ansible-lint
+        run: |
+          pip install --break-system-packages ansible ansible-lint
+
+      - name: Run ansible-lint
+        run: |
+          ansible-lint playbooks/testuser_playbook.yml
+        continue-on-error: true 
+
+  terraform-apply:
     name: Terraform provision
     runs-on: self-hosted
-    needs: validate
+    needs: terraform-validate
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -38,38 +54,46 @@ jobs:
       - name: Terraform init
         run: terraform init
 
-      - name: Terraform apply 
-        run: |
-          terraform apply --auto-approve
-        continue-on-error: true
+      - name: Terraform apply
+        run: terraform apply --auto-approve
+
+      - name: echo pwd
+        run: echo "$PWD"
+
+      - name: check inventory.ini
+        run: cat inventory.ini
+
+      - name: check inventor
+        run: ansible-inventory -i inventory.ini --list
+
+      - name: Run testuser playbook
+        run: ansible-playbook -i inventory.ini playbooks/testuser_playbook.yml
+        
+
+      - name: Install Docker role from Galaxy
+        run: ansible-galaxy install BurenRaas.docker
+
+      - name: Run Docker role playbook
+        run: ansible-playbook -i inventory.ini ansible-role-docker/playbook.yml
+        
 
 
-      - name: List files before upload
-        run: ls -la    
+  ansible-deploy:
+    name: Ansible tasks
+    runs-on: self-hosted
+    needs:  terraform-apply
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Upload Terraform state
-        uses: actions/upload-artifact@v4
-        with:
-          name: terraform.tfstate
-          path: terraform.tfstate
+      - name: check inventory.ini
+        run: cat inventory.ini
 
+      - name: Run testuser playbook
+        run: ansible-playbook -i ~/IAC/les06/inventory.ini playbooks/testuser_playbook.yml
 
-      - name: cat inventory.ini
-        run: | 
-          cat inventory.ini
+      - name: Install Docker role from Galaxy
+        run: ansible-galaxy install BurenRaas.docker
 
-  Ansible:
-     name: Ansible playbooks
-     runs-on: self-hosted
-     needs: terraform
-     steps:
-      - name: testuser_playbook
-        run: |
-          cat inventory.ini
-
-      - name: testuser_playbook
-        run: |
-          ansible-playbook -i inventory.ini playbooks/testuser_playbook.yml
-
-      
-
+      - name: Run Docker role playbook
+        run: ansible-playbook -i ~/IAC/les06/inventory.ini ansible-role-docker/playbook.yml

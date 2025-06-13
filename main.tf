@@ -90,8 +90,8 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   source_image_reference {
     publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-focal"
-    sku       = "20_04-lts"
+    offer     = "ubuntu-24_04-lts"
+    sku       = "server"
     version   = "latest"
   }
 
@@ -122,6 +122,11 @@ resource "esxi_guest" "webserver" {
     "userdata.encoding" = "base64"
   }
 }
+
+output "webserver_ips" {
+  value = [for vm in esxi_guest.webserver : vm.ip_address]
+}
+
 
 #Generate Ansible inventoryfile (IP, user & SSH key) voor webservers en voegt ips toe aan known_hosts voor SSH toegang.
 resource "null_resource" "generate_inventory_and_known_hosts" {

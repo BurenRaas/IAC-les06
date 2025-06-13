@@ -2,12 +2,21 @@
   hosts: all
   become: yes
   tasks:
-    - name: Create testuser
+  
+    - name: Create testuser with sudo privileges
       user:
         name: testuser
         shell: /bin/bash
         state: present
         create_home: yes
+        groups: sudo
+        append: yes
+
+    - name: Allow testuser to use sudo without password
+      copy:
+        dest: /etc/sudoers.d/80-ansible-sudo-user
+        content: "testuser ALL=(ALL) NOPASSWD:ALL"
+        mode: '0440'
 
     - name: Create .ssh directory
       file:
@@ -27,7 +36,7 @@
 
     - name: Copy private key to ESXi VM
       copy:
-        src: ~/.ssh/testuser  
+        src: /home/student/.ssh/testuser  
         dest: /home/testuser/.ssh/testuser
         owner: testuser
         group: testuser

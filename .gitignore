@@ -2,8 +2,6 @@
 .github/*.log
 .github/*.bak
 
-
-
 # GitHub Runner (lokale runner bestanden)
 opdracht2/_runner/
 actions-runner/
