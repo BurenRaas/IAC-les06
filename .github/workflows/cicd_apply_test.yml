@@ -4,7 +4,11 @@ name: CICD
 #omgeving opbouwen met Terraform
 #playbooks draaien met Ansible
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [main] 
+  pull_request:
+    branches: [main]
 
 jobs:
   terraform-validate:
