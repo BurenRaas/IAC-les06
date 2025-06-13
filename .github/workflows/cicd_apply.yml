@@ -52,7 +52,7 @@ jobs:
           ansible-lint playbooks/docker-role_playbook.yml
         continue-on-error: true 
 
-  Build env:
+  provision:
     name:  Omgeving opzetten
     runs-on: self-hosted
     needs: terraform-validate
