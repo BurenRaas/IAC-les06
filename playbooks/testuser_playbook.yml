@@ -9,6 +9,12 @@
         state: present
         create_home: yes
 
+    - name: Add testuser to sudo group
+      user:
+        name: testuser
+        groups: sudo
+        append: yes
+
     - name: Create .ssh directory
       file:
         path: /home/testuser/.ssh
@@ -27,7 +33,7 @@
 
     - name: Copy private key to ESXi VM
       copy:
-        src: ~/.ssh/testuser  
+        src: /home/student/.ssh/testuser  
         dest: /home/testuser/.ssh/testuser
         owner: testuser
         group: testuser
