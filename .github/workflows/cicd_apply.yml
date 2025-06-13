@@ -44,7 +44,7 @@ jobs:
         continue-on-error: true 
 
   terraform-apply:
-    name: Terraform provision
+    name:  Provision
     runs-on: self-hosted
     needs: terraform-validate
     steps:
@@ -72,6 +72,5 @@ jobs:
       - name: Install Docker role from Galaxy
         run: ansible-galaxy install BurenRaas.docker
 
-      - name: Run Docker role playbook
-        run: ansible-playbook -i inventory.ini ansible-role-docker/playbook.yml
+
 
