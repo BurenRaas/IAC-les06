@@ -59,7 +59,7 @@ De CI/CD-pipeline om de omgeving op te bouwen is bedacht met in gedachte: eerste
    - Terraform deployt de infrastructuur.
    - Ansible maakt `testuser` aan, kopieert SSH keys, installeert Docker en haalt de container `hello-world` op.
 
-De pipeline wordt automatisch geactiveerd bij een **push naar de `main` en `test` branch**, via het workflowbestand `cicd_apply.yml`.
+De pipeline wordt automatisch geactiveerd bij een **push naar de `main` en `test` branch**, via het workflowbestand `cicd_apply.yml` en alleen weer er wijzigingen zijn aan .tf bestanden.
 
 De infrastructuur kan handmatig verwijderd worden door het uitvoeren van de pipeline `cicd_destroy.yml`. Deze workflow is beschikbaar in de `.github/workflows` map en activeer je handmatig via de **workflow_dispatch** optie in GitHub. In de workflow wordt Terraform destroy uitgevoerd om de omgeving te verwijderen.
 

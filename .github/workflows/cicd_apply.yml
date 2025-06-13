@@ -7,8 +7,12 @@ name: CICD omgeving opzetten en docker container 'hello world' installeren
 on:
   push:
     branches: [main,test] 
+    paths:
+      - '*.tf'
   pull_request:
     branches: [main,test]
+    paths:
+      - '*.tf'
 
 jobs:
   terraform-validate:
