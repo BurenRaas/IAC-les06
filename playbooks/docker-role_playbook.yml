@@ -1,0 +1,6 @@
+# install-docker.yml
+- name: Docker Ansible galaxy role
+  hosts: all
+  become: yes
+  roles:
+    - BurenRaas.docker

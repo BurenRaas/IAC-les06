@@ -1,4 +1,4 @@
-name: CICD 
+name: CICD omgeving opzetten en docker container 'hello world' installeren 
 
 #code checken
 #omgeving opbouwen met Terraform
@@ -6,9 +6,9 @@ name: CICD
 
 on:
   push:
-    branches: [test] 
+    branches: [main,test] 
   pull_request:
-    branches: [main]
+    branches: [main,test]
 
 jobs:
   terraform-validate:
@@ -43,8 +43,13 @@ jobs:
           ansible-lint playbooks/testuser_playbook.yml
         continue-on-error: true 
 
+      - name: Run ansible-lint
+        run: |
+          ansible-lint playbooks/docker-role_playbook.yml
+        continue-on-error: true 
+
   terraform-apply:
-    name: Terraform provision
+    name:  Omgeving opzetten
     runs-on: self-hosted
     needs: terraform-validate
     steps:
@@ -63,37 +68,19 @@ jobs:
       - name: check inventory.ini
         run: cat inventory.ini
 
-      - name: check inventor
+      - name: check inventory
         run: ansible-inventory -i inventory.ini --list
 
       - name: Run testuser playbook
         run: ansible-playbook -i inventory.ini playbooks/testuser_playbook.yml
         
-
       - name: Install Docker role from Galaxy
         run: ansible-galaxy install BurenRaas.docker
 
-      - name: Run Docker role playbook
-        run: ansible-playbook -i inventory.ini ansible-role-docker/playbook.yml
+      - name: Run testuser playbook
+        run: ansible-playbook -i inventory.ini playbooks/docker-role_playbook.yml
+
         
 
 
-  ansible-deploy:
-    name: Ansible tasks
-    runs-on: self-hosted
-    needs:  terraform-apply
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
 
-      - name: check inventory.ini
-        run: cat inventory.ini
-
-      - name: Run testuser playbook
-        run: ansible-playbook -i ~/IAC/les06/inventory.ini playbooks/testuser_playbook.yml
-
-      - name: Install Docker role from Galaxy
-        run: ansible-galaxy install BurenRaas.docker
-
-      - name: Run Docker role playbook
-        run: ansible-playbook -i ~/IAC/les06/inventory.ini ansible-role-docker/playbook.yml

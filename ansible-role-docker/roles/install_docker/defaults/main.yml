@@ -1,5 +1,0 @@
-#SPDX-License-Identifier: MIT-0
----
-docker_package_name: docker.io
-docker_image_name: hello-world
-
