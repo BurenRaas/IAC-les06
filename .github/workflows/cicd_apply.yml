@@ -56,6 +56,14 @@ jobs:
 
       - name: Terraform apply
         run: terraform apply --auto-approve
+  
+  ansible-deploy:
+    name: Ansible tasks
+    runs-on: self-hosted
+    needs:  terraform-apply
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: echo pwd
         run: echo "$PWD"
@@ -69,31 +77,8 @@ jobs:
       - name: Run testuser playbook
         run: ansible-playbook -i inventory.ini playbooks/testuser_playbook.yml
         
-
       - name: Install Docker role from Galaxy
         run: ansible-galaxy install BurenRaas.docker
 
       - name: Run Docker role playbook
         run: ansible-playbook -i inventory.ini ansible-role-docker/playbook.yml
-        
-
-
-  ansible-deploy:
-    name: Ansible tasks
-    runs-on: self-hosted
-    needs:  terraform-apply
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: check inventory.ini
-        run: cat inventory.ini
-
-      - name: Run testuser playbook
-        run: ansible-playbook -i ~/IAC/les06/inventory.ini playbooks/testuser_playbook.yml
-
-      - name: Install Docker role from Galaxy
-        run: ansible-galaxy install BurenRaas.docker
-
-      - name: Run Docker role playbook
-        run: ansible-playbook -i ~/IAC/les06/inventory.ini ansible-role-docker/playbook.yml
