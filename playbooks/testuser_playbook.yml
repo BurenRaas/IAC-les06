@@ -34,7 +34,7 @@
         group: testuser
         mode: '0600'
 
-    - name: Copy private key to ESXi VM
+    - name: Copy private key to VM
       copy:
         src: /home/student/.ssh/testuser  
         dest: /home/testuser/.ssh/testuser
