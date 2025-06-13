@@ -56,6 +56,24 @@ jobs:
 
       - name: Terraform apply
         run: terraform apply --auto-approve
+
+      - name: echo pwd
+        run: echo "$PWD"
+
+      - name: check inventory.ini
+        run: cat inventory.ini
+
+      - name: check inventor
+        run: ansible-inventory -i inventory.ini --list
+
+      - name: Run testuser playbook
+        run: ansible-playbook -i inventory.ini playbooks/testuser_playbook.yml
+        
+      - name: Install Docker role from Galaxy
+        run: ansible-galaxy install BurenRaas.docker
+
+      - name: Run Docker role playbook
+        run: ansible-playbook -i inventory.ini ansible-role-docker/playbook.yml
   
   ansible-deploy:
     name: Ansible tasks
