@@ -110,7 +110,7 @@ resource "esxi_guest" "webserver" {
   disk_store = "DS01"
   ovf_source = "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.ova"
   memsize    = 1024
-  numvcpus   = 2
+  numvcpus   = 3
   power      = "on"
 
   network_interfaces {
