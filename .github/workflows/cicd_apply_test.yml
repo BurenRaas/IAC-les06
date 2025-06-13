@@ -60,6 +60,12 @@ jobs:
       - name: check inventory.ini
         run: cat inventory.ini
 
+      - name: check inventor
+        run: ansible-inventory -i /home/student/IAC/les06/inventory.ini --list
+
+      - name: echo pwd
+        run: echo "$PWD"
+
       - name: Run testuser playbook
         run: ansible-playbook -i ~/IAC/les06/inventory.ini playbooks/testuser_playbook.yml
 
