@@ -74,6 +74,9 @@ De infrastructuur kan handmatig verwijderd worden door het uitvoeren van de pipe
 
 - Ansible inventory fix AI Prompt:  
   https://chatgpt.com/share/684a9121-a41c-8007-a64c-1f4442b87990
+  
+- Maak de readme.md verder af. Week 6
+  https://chatgpt.com/share/684bfa4a-ffe4-8007-b52a-58a26361eea5
 
 Ruben Baas
 s1190828
