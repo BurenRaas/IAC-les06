@@ -1,4 +1,4 @@
-name: CICD 
+name: CICD omgeving opzetten en docker container 'hello world' installeren 
 
 #code checken
 #omgeving opbouwen met Terraform
@@ -43,8 +43,13 @@ jobs:
           ansible-lint playbooks/testuser_playbook.yml
         continue-on-error: true 
 
+      - name: Run ansible-lint
+        run: |
+          ansible-lint playbooks/docker-role_playbook.yml
+        continue-on-error: true 
+
   terraform-apply:
-    name:  Provision
+    name:  Omgeving opzetten
     runs-on: self-hosted
     needs: terraform-validate
     steps:
@@ -71,6 +76,11 @@ jobs:
         
       - name: Install Docker role from Galaxy
         run: ansible-galaxy install BurenRaas.docker
+
+      - name: Run testuser playbook
+        run: ansible-playbook -i inventory.ini playbooks/docker-role_playbook.yml
+
+        
 
 
 
