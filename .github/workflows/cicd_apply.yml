@@ -6,9 +6,9 @@ name: CICD
 
 on:
   push:
-    branches: [test] 
+    branches: [main,test] 
   pull_request:
-    branches: [main]
+    branches: [main,test]
 
 jobs:
   terraform-validate:
